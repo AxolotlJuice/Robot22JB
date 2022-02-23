@@ -31,6 +31,7 @@ public class AutonJB1 extends CommandBase{
     private SequentialCommandGroup	commands = null;
 	private Command command = null;
     
+    private Pose2d startingPose;
     private final DriveBase driveBase;
 
     private final AutonSelection autonSelection;

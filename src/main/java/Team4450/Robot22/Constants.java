@@ -4,6 +4,8 @@ package Team4450.Robot22;
 import java.util.Properties;
 
 import Team4450.Lib.Util;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
@@ -107,4 +109,14 @@ public final class Constants
     public static final double  DB_POSITIONAL_KD = 36.5; 
     public static final double  DB_VELOCITY_KP = .12;  
     public static final double  DB_VELOCITY_KD = 0.0;
+
+	public static final Pose2d	BLUE_1 = new Pose2d(6.873, 4.990, new Rotation2d(Math.toRadians(243)));
+	public static final Pose2d	BLUE_2 = new Pose2d(6.504, 4.099, new Rotation2d(Math.toRadians(160)));
+	public static final Pose2d	BLUE_3 = new Pose2d(7.218, 2.959, new Rotation2d(Math.toRadians(153)));
+	public static final Pose2d	BLUE_4 = new Pose2d(7.965, 2.585, new Rotation2d(Math.toRadians(70)));
+
+	public static final Pose2d	RED_1 = new Pose2d(9.129, 3.205, new Rotation2d(Math.toRadians(60)));
+	public static final Pose2d	RED_2 = new Pose2d(9.471, 4.102, new Rotation2d(Math.toRadians(336)));
+	public static final Pose2d	RED_3 = new Pose2d(8.942, 5.286, new Rotation2d(Math.toRadians(332)));
+	public static final Pose2d	RED_4 = new Pose2d(8.122, 5.475, new Rotation2d(Math.toRadians(246)));
 }
