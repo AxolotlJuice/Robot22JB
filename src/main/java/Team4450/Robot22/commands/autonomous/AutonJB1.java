@@ -2,27 +2,16 @@ package Team4450.Robot22.commands.autonomous;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import Team4450.Lib.LCD;
 import Team4450.Lib.SRXMagneticEncoderRelative;
-import Team4450.Lib.SynchronousPID;
 import Team4450.Lib.Util;
 
 import static Team4450.Robot22.Constants.*;
-
-import java.util.List;
 
 import Team4450.Robot22.RobotContainer;
 import Team4450.Robot22.subsystems.Chooter;
 import Team4450.Robot22.subsystems.DriveBase;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
@@ -71,33 +60,35 @@ public class AutonJB1 extends CommandBase{
         command = new InstantCommand(chooter::autonHighShot);
         commands.addCommands(command);
         
-        command = new AutoRotate(driveBase, 1.5, 1.0, AutoDrive.Pid.on, AutoDrive.Heading.angle);
+        command = new AutoRotate(driveBase, 1.0, 148.0, AutoDrive.Pid.on, AutoDrive.Heading.angle);
         commands.addCommands(command);
         
-        command = new AutoDrive(driveBase, 0,
-                                SRXMagneticEncoderRelative.getTicksForDistance(0, DRIVE_WHEEL_DIAMETER),
+        command = new AutoDrive(driveBase, 1,
+                                SRXMagneticEncoderRelative.getTicksForDistance(4.072792543, DRIVE_WHEEL_DIAMETER),
                                 AutoDrive.StopMotors.stop,
                                 AutoDrive.Brakes.on,
                                 AutoDrive.Pid.on,
                                 AutoDrive.Heading.angle);
+        //move 4.072792543 ft.
+        commands.addCommands(command);
+        
+        command = new AutoRotate(driveBase, 1.5, -61.0, AutoDrive.Pid.on, AutoDrive.Heading.angle);
         commands.addCommands(command);
 
-        command = new AutoRotate(driveBase, 1.5, -1.0, AutoDrive.Pid.on, AutoDrive.Heading.angle);
-        commands.addCommands(command);
-
-        command = new AutoDrive(driveBase, 0,
-                                SRXMagneticEncoderRelative.getTicksForDistance(0, DRIVE_WHEEL_DIAMETER),
+        command = new AutoDrive(driveBase, 1,
+                                SRXMagneticEncoderRelative.getTicksForDistance(3.975897565, DRIVE_WHEEL_DIAMETER),
                                 AutoDrive.StopMotors.stop,
                                 AutoDrive.Brakes.on,
                                 AutoDrive.Pid.on,
                                 AutoDrive.Heading.angle);
+        //move 3.975897565 ft.
         commands.addCommands(command);
 
         command = new InstantCommand(chooter::autonHighShot);
         commands.addCommands(command);
 
         command = new AutoDrive(driveBase, -1,
-                                SRXMagneticEncoderRelative.getTicksForDistance(2, DRIVE_WHEEL_DIAMETER),
+                                SRXMagneticEncoderRelative.getTicksForDistance(2.0, DRIVE_WHEEL_DIAMETER),
                                 AutoDrive.StopMotors.stop,
                                 AutoDrive.Brakes.on,
                                 AutoDrive.Pid.on,
