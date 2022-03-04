@@ -36,9 +36,10 @@ public class AutonJB2 extends CommandBase{
         this.startingPose = startingPose;
         addRequirements(driveBase);
 
+        /*
         if(startingPose2d ==  ){
-
         }
+        */ 
     }
 
     @Override
