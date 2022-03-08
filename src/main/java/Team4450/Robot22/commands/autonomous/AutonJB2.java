@@ -45,13 +45,18 @@ public class AutonJB2 extends CommandBase{
     @Override
     public void initialize(){
         Util.consoleLog(); 
+
         driveBase.setMotorSafety(false);
+
         driveBase.resetEncodersWithDelay();
+
         RobotContainer.navx.resetYaw();
         RobotContainer.navx.setHeading(startingPose.getRotation().getDegrees() + 90); //will needed to be changed
         RobotContainer.navx.setTargetHeading(startingPose.getRotation().getDegrees() + 90);
+        
         driveBase.SetCANTalonRampRate(1.0);
         driveBase.resetOdometer(startingPose, startingPose.getRotation().getDegrees() + 90);
+
         commands = new SequentialCommandGroup();
      
         //run method in chooter
@@ -64,7 +69,7 @@ public class AutonJB2 extends CommandBase{
         //                        AutoDrive.Heading.angle);
         //commands.addCommands(command);
         
-        command = new InstantCommand(chooter::autonHighShot);
+        command = new InstantCommand(chooter::highShot);
         commands.addCommands(command);
 
         command = new AutoDrive(driveBase, 0,

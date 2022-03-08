@@ -31,17 +31,24 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import Team4450.Robot22.commands.ArcadeDrive;
+import Team4450.Robot22.commands.Climb;
 import Team4450.Robot22.commands.TankDrive;
-import Team4450.Robot22.commands.autonomous.TestAuto;
+import Team4450.Robot22.commands.autonomous.AutonJB1;
+import Team4450.Robot22.commands.autonomous.AutonJB2;
 import Team4450.Robot22.commands.NotifierCommand;
+import Team4450.Robot22.subsystems.Channel;
+import Team4450.Robot22.subsystems.Climber;
 import Team4450.Robot22.subsystems.DriveBase;
 import Team4450.Robot22.subsystems.LimeLight;
+import Team4450.Robot22.subsystems.Pickup;
+import Team4450.Robot22.subsystems.Chooter;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -54,8 +61,13 @@ public class RobotContainer
 	// Subsystems.
 
 	private final DriveBase 	driveBase;
+	public static Channel		channel;
+	public static Pickup		pickup;
+	public static Chooter		chooter;
+	public static Climber		climber;
 
 	// Subsystem Default Commands.
+
 	private final TankDrive		driveCommand;
 	//private final ArcadeDrive	driveCommand;
 
@@ -116,10 +128,12 @@ public class RobotContainer
 	private enum AutoProgram
 	{
 		NoProgram,
-		TestAuto
+		DriveOut,
+		ShootFirst
 	}
 
 	private static SendableChooser<AutoProgram>	autoChooser;
+	private static SendableChooser<Pose2d>		startingPoseChooser;
 
 	/**
 	 * The container for the robot. Contains subsystems, Opertor Interface devices, and commands.
@@ -189,11 +203,22 @@ public class RobotContainer
 		// Create subsystems prior to button mapping.
 		
 		driveBase = new DriveBase();
-		
+        channel = new Channel();
+        chooter = new Chooter(channel);
+        pickup = new Pickup();
+		climber = new Climber();
+
 		// Create any persistent commands.
 
 		// Set subsystem Default commands.
-	  
+		
+		// Set the default climb command. This command will be scheduled automatically to run
+		// every teleop period and so use the utility joy stick to control the climber winch.
+		// We pass in function lambda so the command can read the stick generically as a
+		// DoubleProvider when it runs later (see below).
+		
+		climber.setDefaultCommand(new Climb(climber, () -> utilityStick.GetY()));
+
 		// Set the default drive command. This command will be scheduled automatically to run
 		// every teleop period and so use the joy sticks to drive the robot. We pass in function
 		// lambda, which is like creating a DoulbleSupplier conformant class, so the command can 
@@ -253,6 +278,8 @@ public class RobotContainer
 
 		setAutoChoices();
 
+		setStartingPoses();
+
 		// Configure the button bindings for real and simulated robot.
 		
         if (RobotBase.isReal()) 
@@ -291,7 +318,33 @@ public class RobotContainer
     		.whenPressed(new InstantCommand(driveCommand::toggleAlternateDrivingMode));
  
 		// -------- Utility stick buttons ----------
+		// Toggle extend Pickup.
+		// So we show 3 ways to control the pickup. A regular command that toggles pickup state,
+		// an instant command that calls a method on Pickup class that toggles state and finally
+		// our special notifier variant that runs the Pickup class toggle method in a separate
+		// thread. So we show all 3 methods as illustration but the reason we tried 3 methods is
+		// that the pickup retraction action takes almost 1 second (due apparently to some big
+		// overhead in disabling the electric eye interrupt) and triggers the global and drivebase
+		// watchdogs. Threading does not as the toggle method is not run on the scheduler thread.
+		// Note: the threaded command can only execute a runnable (function on a class) not a Command.
 		
+		new JoystickButton(utilityStick.getJoyStick(), JoyStick.JoyStickButtonIDs.TOP_BACK.value)
+        	//.whenPressed(new PickupDeploy(pickup));		
+			//.whenPressed(new InstantCommand(pickup::toggleDeploy, pickup));
+			.whenPressed(new NotifierCommand(pickup::toggleDeploy, 0.0, pickup));
+
+			new JoystickButton(utilityStick.getJoyStick(), JoyStick.JoyStickButtonIDs.TOP_MIDDLE.value)
+			.whenPressed(new InstantCommand(chooter::togglePID, chooter));		
+		
+        new JoystickButton(utilityStick.getJoyStick(), JoyStick.JoyStickButtonIDs.TOP_LEFT.value)
+			.whenPressed(new InstantCommand(channel::toggleIndexerUp, channel));
+		
+        new JoystickButton(utilityStick.getJoyStick(), JoyStick.JoyStickButtonIDs.TOP_RIGHT.value)
+			.whenPressed(new InstantCommand(channel::toggleIndexerDown, channel));
+
+        new JoystickButton(utilityStick.getJoyStick(), JoyStick.JoyStickButtonIDs.TRIGGER.value)
+            .whenPressed(new NotifierCommand(channel::feedBall, 0.0));
+
 		// -------- Launch pad buttons -------------
 		
 		// Because the launch pad buttons are wired backwards, we use whenReleased to 
@@ -300,10 +353,20 @@ public class RobotContainer
         // Reset odometer.
 		new JoystickButton(launchPad, LaunchPad.LaunchPadControlIDs.BUTTON_GREEN.value)
     		.whenReleased(new InstantCommand(driveBase::zeroOdometer));
+        
+        // Toggle shooter wheel high/low RPM.
+		new JoystickButton(launchPad, LaunchPad.LaunchPadControlIDs.BUTTON_RED_RIGHT.value)
+    		.whenReleased(new InstantCommand(chooter::toggleHighLowRPM));
 
     	// Reset encoders.
 		new JoystickButton(launchPad, LaunchPad.LaunchPadControlIDs.BUTTON_RED.value)
     		.whenReleased(new InstantCommand(driveBase::resetEncoders));
+	
+		new JoystickButton(launchPad, LaunchPad.LaunchPadControlIDs.BUTTON_YELLOW.value)
+    		.whenReleased(new InstantCommand(climber::toggleDeployMain));
+			
+		new JoystickButton(launchPad, LaunchPad.LaunchPadControlIDs.BUTTON_BLUE_RIGHT.value)
+    		.whenReleased(new InstantCommand(climber::toggleDeployAux));
 			
 		// Toggle drive CAN Talon brake mode. We need to capture both sides of the rocker switch
 		// to get a toggle on either position of the rocker.
@@ -345,6 +408,7 @@ public class RobotContainer
 	public Command getAutonomousCommand() 
 	{
 		AutoProgram		program = AutoProgram.NoProgram;
+		Pose2d			startingPose = BLUE_1;
 		Command			autoCommand = null;
 		
 		Util.consoleLog();
@@ -352,6 +416,8 @@ public class RobotContainer
 		try
 		{
 			program = autoChooser.getSelected();
+
+			startingPose = startingPoseChooser.getSelected();
 		}
 		catch (Exception e)	{ Util.logException(e); }
 		
@@ -361,8 +427,12 @@ public class RobotContainer
 				autoCommand = null;
 				break;
  				
-				case TestAuto:
-				autoCommand = new TestAuto(driveBase);
+			case AutonJB1:
+				autoCommand = new AutonJB1(driveBase, startingPose);
+				break;
+ 				
+			case AutonJB2:
+				autoCommand = new AutonJB2(driveBase, startingPose);
 				break;
 		}
         
@@ -383,9 +453,33 @@ public class RobotContainer
 		
 		SendableRegistry.add(autoChooser, "Auto Program");
 		autoChooser.setDefaultOption("No Program", AutoProgram.NoProgram);
-		autoChooser.addOption("Test Auto", AutoProgram.TestAuto);		
+		autoChooser.addOption("Drive Out", AutoProgram.DriveOut);		
+		autoChooser.addOption("Shoot First", AutoProgram.ShootFirst);		
 				
 		SmartDashboard.putData(autoChooser);
+	}
+  
+    // Configure SendableChooser (drop down list on dashboard) with starting pose choices and
+	// send them to SmartDashboard/ShuffleBoard.
+	
+	private static void setStartingPoses()
+	{
+		Util.consoleLog();
+		
+		startingPoseChooser = new SendableChooser<Pose2d>();
+		
+		SendableRegistry.add(startingPoseChooser, "Start Position");
+		startingPoseChooser.setDefaultOption("Blue 1", BLUE_1);
+		startingPoseChooser.addOption("Blue 2", BLUE_2);		
+		startingPoseChooser.addOption("Blue 3", BLUE_3);		
+		startingPoseChooser.addOption("Blue 4", BLUE_4);		
+
+		startingPoseChooser.addOption("Red 1", RED_1);		
+		startingPoseChooser.addOption("Red 2", RED_2);		
+		startingPoseChooser.addOption("Red 3", RED_3);		
+		startingPoseChooser.addOption("Red 4", RED_4);		
+				
+		SmartDashboard.putData(startingPoseChooser);
 	}
 
 	/**

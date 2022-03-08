@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Channel extends SubsystemBase{
+    
+    
     private boolean indexerRunning;
 
     private WPI_VictorSPX   indexerMotor = new WPI_VictorSPX(INDEXER_VICTOR);
@@ -98,7 +100,7 @@ public class Channel extends SubsystemBase{
         Util.consoleLog();
 
         // Can't feed a ball if shooter wheel is not running.
-        if  (!RobotContainer.shooter.isRunning()) return;
+        if  (!RobotContainer.chooter.isRunning()) return;
 
         startIndexer();
 

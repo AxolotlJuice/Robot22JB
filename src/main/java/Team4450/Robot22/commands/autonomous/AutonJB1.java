@@ -8,12 +8,14 @@ import Team4450.Lib.Util;
 import static Team4450.Robot22.Constants.*;
 
 import Team4450.Robot22.RobotContainer;
+import Team4450.Robot22.subsystems.Channel;
 import Team4450.Robot22.subsystems.Chooter;
 import Team4450.Robot22.subsystems.DriveBase;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 
 public class AutonJB1 extends CommandBase{
@@ -25,8 +27,6 @@ public class AutonJB1 extends CommandBase{
     
     private Pose2d startingPose;
     private final DriveBase driveBase;
-
-    private double tempIntialX, tempIntialY;
 
     public AutonJB1(DriveBase driveBase, Pose2d startingPose){
         Util.consoleLog();
@@ -57,7 +57,7 @@ public class AutonJB1 extends CommandBase{
         //                        AutoDrive.Heading.angle);
         //commands.addCommands(command);
         
-        command = new InstantCommand(chooter::autonHighShot);
+        command = new InstantCommand(chooter::highShot);
         commands.addCommands(command);
         
         command = new AutoRotate(driveBase, 1.0, 148.0, AutoDrive.Pid.on, AutoDrive.Heading.angle);
@@ -84,8 +84,12 @@ public class AutonJB1 extends CommandBase{
         //move 3.975897565 ft.
         commands.addCommands(command);
 
-        command = new InstantCommand(chooter::autonHighShot);
+        command = new InstantCommand(chooter::highShot);
         commands.addCommands(command);
+
+        command = new WaitCommand(0.2);
+
+        command = new InstantCommand(channel::feedBall);
 
         command = new AutoDrive(driveBase, -1,
                                 SRXMagneticEncoderRelative.getTicksForDistance(2.0, DRIVE_WHEEL_DIAMETER),
@@ -116,4 +120,5 @@ public class AutonJB1 extends CommandBase{
 
         return !commands.isScheduled();
     }
+
 }
