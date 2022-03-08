@@ -26,22 +26,29 @@ public class Chooter extends PIDSubsystem{
     private FXEncoder       encoder = new FXEncoder(shooterMotor);
 
     public final double     defaultPower = .50, lowTargetRPM = 3000, highTargetRPM = 5000, maxRPM = 6000;
-    private double          currentPower = defaultPower, targetRPM = lowTargetRPM, toleranceRPM = 50;
+    private double          currentPower = defaultPower, targetRPM = highTargetRPM, toleranceRPM = 50;
     private static double   kP = .0002, kI = kP / 100, kD = 0;
-    private boolean         startUp, highRPM;
+    private boolean         startUp, highRPM = true;
     private double          startTime, kS = .498, kV = .108;
 
-    private Channel channel;
-    
+    private Channel         channel;
     // ks and kv determined by characterizing the shooter motor. See the shooter characterization
     // project.
     private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(kS, kV);
     
     public Chooter(Channel channel)
     {  
-        new PIDController(kP, kI, kD); //why error :(
-        getController().setTolerance((double) tolerance);
+        super(new PIDController(kP, kI, kD));
+
+        shooterMotor.setInverted(true);
+    
+        getController().setTolerance(toleranceRPM);
+		  
         shooterMotor.setNeutralMode(NeutralMode.Coast);
+
+        this.channel = channel;
+
+        Util.consoleLog("Shooter created!");
     }
 
     public void enable(double rpm){
@@ -64,11 +71,11 @@ public class Chooter extends PIDSubsystem{
     }
     
     public void highShot(){
-        enable(1000); //temp value
+        enable(5000); //temp value
     }
     
     public void lowShot(){
-        enable(300); //temp value
+        enable(3000); //temp value
     }    
 
     public boolean toggleHighLowRPM(){
@@ -162,7 +169,7 @@ public class Chooter extends PIDSubsystem{
         updateDS();
     }
 
-    private void stopWheel()
+    public void stopWheel()
     {
         Util.consoleLog();
         if (isEnabled()) disable();
