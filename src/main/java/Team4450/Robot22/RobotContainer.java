@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj2.command.Command;
 //import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -67,7 +68,7 @@ public class RobotContainer
 	// commented out sections: 37, 40, 43-48, 53, 135-147, 290, 423-473, 676-494
 	//They were commented out because we wanted to run a student made AutonSelect.
 
-	
+
 	private final DriveBase 	driveBase;
 	public static Channel		channel;
 	public static Pickup		pickup;
@@ -421,10 +422,19 @@ public class RobotContainer
 	 * @return The command to run in autonomous
 	 */
 
+	public Command getAutonPath()
+	{
+		AutonSelect autonPath = new AutonSelect(driveBase, channel, pickup, chooter, climber);
 
-	/*
+		return autonPath.getAutonomousCommand();
+	}
+
+		/*
 	public Command getAutonomousCommand() 
 	{
+		
+
+		
 		AutoProgram		program = AutoProgram.NoProgram;
 		Pose2d			startingPose = BLUE_1;
 		Command			autoCommand = null;
@@ -471,6 +481,7 @@ public class RobotContainer
         driveBase.setPowerDeadBand(.02);
 
 		return autoCommand;
+		
 	}
 	*/
     // Configure SendableChooser (drop down list on dashboard) with auto program choices and

@@ -1,4 +1,4 @@
-package Team4450.Robot22.subsystems;
+package Team4450.Robot22;
 
 import Team4450.Lib.Util;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -9,10 +9,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import Team4450.Robot22.commands.autonomous.DriveOut;
+import Team4450.Robot22.commands.autonomous.ShootFirst;
 import Team4450.Robot22.commands.autonomous.ShootFirst2BL;
 import Team4450.Robot22.commands.autonomous.ShootFirst2BR;
 import Team4450.Robot22.commands.autonomous.ShootFirst3BL;
 import Team4450.Robot22.commands.autonomous.ShootFirst3BR;
+import Team4450.Robot22.subsystems.Channel;
+import Team4450.Robot22.subsystems.Chooter;
+import Team4450.Robot22.subsystems.Climber;
+import Team4450.Robot22.subsystems.DriveBase;
+import Team4450.Robot22.subsystems.Pickup;
 
 public class AutonSelect extends SubsystemBase
 {
@@ -44,7 +50,6 @@ public class AutonSelect extends SubsystemBase
     //Selecting Auton
     private enum AutoProgram
     {
-        NoAuton,
         NoProgram,
 		DriveOut,
 		ShootFirst,
@@ -60,7 +65,7 @@ public class AutonSelect extends SubsystemBase
 
     public Command getAutonomousCommand()
     {
-        AutoProgram     program = AutoProgram.NoAuton;
+        AutoProgram     program = AutoProgram.NoProgram;
         Pose2d          startingPose = LBL;
         Command         autoCommand = null;
 
@@ -82,6 +87,9 @@ public class AutonSelect extends SubsystemBase
 				autoCommand = new DriveOut(driveBase, startingPose);
 				break;
  				
+            case ShootFirst:
+                autoCommand = new ShootFirst(driveBase, chooter, channel, startingPose);
+                break;
 			case ShootFirst2BL:
 				autoCommand = new ShootFirst2BL(driveBase, chooter, channel, startingPose, pickup);
 				break;
