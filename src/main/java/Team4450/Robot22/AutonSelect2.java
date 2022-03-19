@@ -16,12 +16,11 @@ import Team4450.Robot22.commands.autonomous.ShootFirst3BR;
 
 public class AutonSelect extends SubsystemBase
 {
-
     private final DriveBase driveBase;
-	public static Channel channel;
-	public static Pickup pickup;
-	public static Chooter chooter;
-	public static Climber climber;
+	private final Channel channel;
+	private final Pickup pickup;
+	private final Chooter chooter;
+	private final Climber climber;
 
     public AutonSelect(DriveBase driveBase, Channel channel, Pickup pickup, Chooter chooter, Climber climber)
     {

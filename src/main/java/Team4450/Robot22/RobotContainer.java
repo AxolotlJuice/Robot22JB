@@ -34,19 +34,23 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj2.command.Command;
+//import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import Team4450.Robot22.commands.ArcadeDrive;
+//import Team4450.Robot22.commands.ArcadeDrive;
 import Team4450.Robot22.commands.Climb;
 import Team4450.Robot22.commands.TankDrive;
-import Team4450.Robot22.commands.autonomous.DriveOut;
-import Team4450.Robot22.commands.autonomous.AutonJB1;
+//import Team4450.Robot22.commands.autonomous.DriveOut;
+//import Team4450.Robot22.commands.autonomous.ShootFirst;
+//import Team4450.Robot22.commands.autonomous.ShootFirst2BL;
+//import Team4450.Robot22.commands.autonomous.ShootFirst2BR;
+//import Team4450.Robot22.commands.autonomous.ShootFirst3BL;
+//import Team4450.Robot22.commands.autonomous.ShootFirst3BR;
 import Team4450.Robot22.commands.NotifierCommand;
 import Team4450.Robot22.subsystems.Channel;
 import Team4450.Robot22.subsystems.Climber;
 import Team4450.Robot22.subsystems.DriveBase;
-import Team4450.Robot22.subsystems.LimeLight;
+//import Team4450.Robot22.subsystems.LimeLight;
 import Team4450.Robot22.subsystems.Pickup;
 import Team4450.Robot22.subsystems.Chooter;
 
@@ -60,6 +64,10 @@ public class RobotContainer
 {
 	// Subsystems.
 
+	// commented out sections: 37, 40, 43-48, 53, 135-147, 290, 423-473, 676-494
+	//They were commented out because we wanted to run a student made AutonSelect.
+
+	
 	private final DriveBase 	driveBase;
 	public static Channel		channel;
 	public static Pickup		pickup;
@@ -125,15 +133,22 @@ public class RobotContainer
 
     // List of autonomous programs. Any change here must be reflected in getAutonomousCommand()
     // and setAutoChoices() which appear later in this class.
+
+	/*
 	private enum AutoProgram
 	{
 		NoProgram,
 		DriveOut,
-		AutonJB1
+		ShootFirst,
+		ShootFirst2BL,
+		ShootFirst2BR,
+		ShootFirst3BL,
+		ShootFirst3BR
 	}
-
-	private static SendableChooser<AutoProgram>	autoChooser;
+	
+	private static SendableChooser<AutoProgram>	autoChooser; */
 	private static SendableChooser<Pose2d>		startingPoseChooser;
+	
 
 	/**
 	 * The container for the robot. Contains subsystems, Opertor Interface devices, and commands.
@@ -276,7 +291,7 @@ public class RobotContainer
         
         // Configure autonomous routines and send to dashboard.
 
-		setAutoChoices();
+		//setAutoChoices();
 
 		setStartingPoses();
 
@@ -405,6 +420,9 @@ public class RobotContainer
 	 * DS drop down list of commands.
 	 * @return The command to run in autonomous
 	 */
+
+
+	/*
 	public Command getAutonomousCommand() 
 	{
 		AutoProgram		program = AutoProgram.NoProgram;
@@ -431,9 +449,22 @@ public class RobotContainer
 				autoCommand = new DriveOut(driveBase, startingPose);
 				break;
  				
-			case AutonJB1:
-				autoCommand = new AutonJB1(driveBase, startingPose);
+			case ShootFirst2BL:
+				autoCommand = new ShootFirst2BL(driveBase, chooter, channel, startingPose, pickup);
 				break;
+
+			case ShootFirst2BR:
+				autoCommand = new ShootFirst2BR(driveBase, chooter, channel, startingPose, pickup);
+				break;
+
+			case ShootFirst3BL:
+				autoCommand = new ShootFirst3BL(driveBase, chooter, channel, startingPose, pickup);
+				break;
+
+			case ShootFirst3BR:
+				autoCommand = new ShootFirst3BR(driveBase, chooter, channel, startingPose, pickup);
+				break;
+
 		}
         
         // Reset motor deadband for auto.
@@ -441,10 +472,10 @@ public class RobotContainer
 
 		return autoCommand;
 	}
-  
+	*/
     // Configure SendableChooser (drop down list on dashboard) with auto program choices and
 	// send them to SmartDashboard/ShuffleBoard.
-	
+	/*
 	private static void setAutoChoices()
 	{
 		Util.consoleLog();
@@ -453,12 +484,16 @@ public class RobotContainer
 		
 		SendableRegistry.add(autoChooser, "Auto Program");
 		autoChooser.setDefaultOption("No Program", AutoProgram.NoProgram);
-		autoChooser.addOption("Drive Out", AutoProgram.DriveOut);		
-		autoChooser.addOption("AutonJB1", AutoProgram.AutonJB1);		
-				
+		autoChooser.addOption("Drive Out", AutoProgram.DriveOut);
+		autoChooser.addOption("ShootFrist", AutoProgram.ShootFirst);
+		autoChooser.addOption("ShootFrist2BL", AutoProgram.ShootFirst2BL);
+		autoChooser.addOption("ShootFrist2BR", AutoProgram.ShootFirst2BR);		
+		autoChooser.addOption("ShootFrist3BL", AutoProgram.ShootFirst3BL);
+		autoChooser.addOption("ShootFrist3BR", AutoProgram.ShootFirst3BR);
+
 		SmartDashboard.putData(autoChooser);
 	}
-  
+	*/
     // Configure SendableChooser (drop down list on dashboard) with starting pose choices and
 	// send them to SmartDashboard/ShuffleBoard.
 	
