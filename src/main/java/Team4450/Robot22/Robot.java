@@ -93,7 +93,7 @@ public class Robot extends TimedRobot
       if (RobotBase.isSimulation()) Util.consoleLog("Simulated Robot");
       if (RobotBase.isReal()) Util.consoleLog("Real Robot");
 
-      // Debugging code for WPILib bug. Bug fixed but keeing this for a bit.
+      // Debugging code for WPILib bug. Bug fixed but keeping this for a bit.
       // monitorDS1Thread = MonitorDS1.getInstance();
       // monitorDS1Thread.start();
 
@@ -186,109 +186,26 @@ public class Robot extends TimedRobot
   @Override
   public void disabledInit() 
   {
-    try {
-      robot = this;
+    Util.consoleLog();
 
-      LCD.clearAll();
-      LCD.printLine(LCD_1, "Mode: RobotInit");
+    LCD.printLine(LCD_1, "Mode: Disabled");
 
-      // Set up our custom logger.
+    // Reset driver station LEDs.
 
-      Util.CustomLogger.setup();
+    SmartDashboard.putBoolean("Disabled", true);
+    SmartDashboard.putBoolean("Auto Mode", false);
+    SmartDashboard.putBoolean("Teleop Mode", false);
+    SmartDashboard.putBoolean("FMS", DriverStation.isFMSAttached());
+    SmartDashboard.putBoolean("Overload", false);
+    SmartDashboard.putNumber("AirPressure", 0);
+    SmartDashboard.putBoolean("AltDriveMode", false);
+    SmartDashboard.putBoolean("SteeringAssist", false);
+    SmartDashboard.putBoolean("Brake", false);
+    //SmartDashboard.putBoolean("TargetLocked", false);
 
-      // The wpilib classes that underlie this class generate a lot of warning
-      // messages
-      // that flood the Riolog and make it almost unusable. The warnings are about our
-      // code in the robotPeriodic() function taking longer than .02 sec to execute.
-      // It's very hard to stay under this limit. So...copied classes from the wpilib
-      // name space to inside this project and modified them to allow us to control
-      // these
-      // warnings and log some of them to our log file. The warnings from
-      // IterativeRobotBase
-      // can be turned on/off and the timeout set. Any warnings from that class will
-      // go to
-      // our log file. The CommandScheduler also generates essentially the same
-      // warnings
-      // but copying that is getting beyond what we should be doing, so we just set
-      // its
-      // internal timeout (because it allows us to) to a longer value to turn off its
-      // warnings. It does not log to our log file. These warnings can be turned back
-      // on at times to check if we are having significant overruns but turned off if
-      // things look ok. This is a major hack, the downside of which is that with each
-      // release of Wpilib the copied files would have to be recopied and remodified.
-      // IterativeRobotBase and Watchdog have been modified.
-      // Note that the periodic function is called very .02 sec. If our code runs too
-      // long that can lead to various control problems. But, it has proven hard to
-      // do anything useful and not exceed the .02 sec watchdogs.
-
-      enableWatchDogWarning(false);
-      enableWatchDogFlush(false);
-      this.setWatchDogTimeout(.04);
-      CommandScheduler.getInstance().setPeriod(1.0);
-
-      // Set Java to catch any uncaught exceptions and record them in our log file.
-
-      Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() 
-      {
-        public void uncaughtException(Thread t, Throwable e) 
-        {
-          Util.consoleLog("Uncaught exception from thread " + t);
-          Util.logException(e);
-          robot.endCompetition();
-        }
-      });
-
-      if (RobotBase.isSimulation()) Util.consoleLog("Simulated Robot");
-      if (RobotBase.isReal()) Util.consoleLog("Real Robot");
-
-      // Debugging code for WPILib bug. Bug fixed but keeing this for a bit.
-      // monitorDS1Thread = MonitorDS1.getInstance();
-      // monitorDS1Thread.start();
-
-      // monitorDS2Thread = MonitorDS2.getInstance();
-      // monitorDS2Thread.start();
-
-      // Eliminate LW overhead when not using it.
-      LiveWindow.disableAllTelemetry();
-
-      // Create SendableVersion object so it can be sent to the dashboard and also
-      // log some of it's information.
-
-      SendableVersion.INSTANCE.init(PROGRAM_NAME);
-
-      // Note: for 2022, under simulation, this information may not be not correct.
-      Util.consoleLog("%s compiled by %s at %s (branch=%s, commit=%s)", SendableVersion.INSTANCE.getProgramVersion(),
-          SendableVersion.INSTANCE.getUser(), SendableVersion.INSTANCE.getTime(), SendableVersion.INSTANCE.getBranch(),
-          SendableVersion.INSTANCE.getCommit());
-
-      //Util.consoleLog("manifest path=%s", SendableVersion.INSTANCE.getPath());
-
-      // Send program version to the dashboard.
-      SmartDashboard.putString("Program", PROGRAM_NAME);
-
-      // Log RobotLib and WPILib versions we are using.
-      Util.consoleLog("RobotLib=%s, WPILib=%s", LibraryVersion.version, WPILibVersion.Version);
-
-      // Note: Any Sendables added to SmartDashboard or Shuffleboard are sent to the DS on every
-      // loop of a TimedRobot. In this case it means that the SendableVersion data would be sent
-      // to the DS every 20ms even though it does not change. Sendables must be added to the SDB
-      // or SB in order to be sent so its a catch-22 with static Sendables. So we add the SendableVersion
-      // here and then a few lines below delete it from the sendable system. This puts the version
-      // info onto the dashboard but removes it from further updates.
-
-      SmartDashboard.putData("Version", (Sendable) SendableVersion.INSTANCE);
-
-      // Instantiate our RobotContainer class. This will perform all necessary setup of the various
-      // subsystems, commands and other items that are needed to to be ready before we start doing
-      // either autonomous or teleop modes.
-
-      robotContainer = new RobotContainer();
-
-      SendableVersion.INSTANCE.removeSendable();
-    } catch (Exception e) {
-      Util.logException(e);
-      this.endCompetition();
-    }
+    RobotContainer.pickup.retract();
+    RobotContainer.channel.stopIndexer();
+    RobotContainer.chooter.stopWheel();
 
     Util.consoleLog("end -------------------------------------------------------------------------");
   }
@@ -329,8 +246,7 @@ public class Robot extends TimedRobot
     // schedule the autonomous command (example)
 
     try {
-      if (autonomousCommand != null)
-        autonomousCommand.schedule();
+      if (autonomousCommand != null) autonomousCommand.schedule();
     } catch (Exception e) {
       Util.logException(e);
       this.endCompetition();
@@ -367,6 +283,10 @@ public class Robot extends TimedRobot
     SmartDashboard.putBoolean("Teleop Mode", true);
 
     robotContainer.resetFaults();
+
+    RobotContainer.pickup.initialize();
+    RobotContainer.climber.initialize();
+    RobotContainer.chooter.initialize(true);
 
     // Driving handled by DriveCommand which is default command for the DriveBase.
     // Other commands scheduled by joystick buttons.

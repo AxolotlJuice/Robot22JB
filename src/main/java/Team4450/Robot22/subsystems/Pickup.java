@@ -25,7 +25,7 @@ public class Pickup extends SubsystemBase{
     public Pickup() {
         Util.consoleLog();
 
-        lowerVictor = new WPI_VictorSPX(LOWER_PICK_UP);
+        lowerVictor = new WPI_VictorSPX(LOWER_PICKUP_VICTOR);
         upperVictor = new WPI_VictorSPX(UPPER_PICKUP_VICTOR);
 
         pickupDrive = new MotorControllerGroup(lowerVictor, upperVictor);
@@ -108,4 +108,11 @@ public class Pickup extends SubsystemBase{
         return pickupRunning;
     }
     //created by AJD do not steal or i will seek legal action
+
+	public void initialize()
+	{
+		Util.consoleLog();
+
+        retract();
+	}
 }

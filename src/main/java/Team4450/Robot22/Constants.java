@@ -1,5 +1,4 @@
 
-
 package Team4450.Robot22;
 
 import java.util.Properties;
@@ -19,7 +18,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public final class Constants
 {
-	public static String		PROGRAM_NAME = "RAC22-02.28.22-1";
+	public static String		PROGRAM_NAME = "RAC22-03.11.22-3";
 
 	public static Robot			robot;
 
@@ -44,8 +43,8 @@ public final class Constants
 	// Pneumatic valve controller port assignments.
 	public static final int		COMPRESSOR = 0;
 	public static final int		PICKUP_VALVE = 0;			// 0-1
-	public static final int		MAIN_CLIMBER_VALVE = 2;		// 2-3
-	public static final int		AUX_CLIMBER_VALVE = 4;		// 4-5
+	public static final int		MAIN_CLIMBER_VALVE = 4;		// 4-5
+	public static final int		AUX_CLIMBER_VALVE = 2;		// 2-3
 
 	// Digital Input port assignments. Encoder takes 2 ports.
 	public static final int		CLIMBER_SWITCH = 0;

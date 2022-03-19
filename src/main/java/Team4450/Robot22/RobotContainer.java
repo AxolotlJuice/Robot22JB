@@ -40,8 +40,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import Team4450.Robot22.commands.ArcadeDrive;
 import Team4450.Robot22.commands.Climb;
 import Team4450.Robot22.commands.TankDrive;
+import Team4450.Robot22.commands.autonomous.DriveOut;
 import Team4450.Robot22.commands.autonomous.AutonJB1;
-import Team4450.Robot22.commands.autonomous.AutonJB2;
 import Team4450.Robot22.commands.NotifierCommand;
 import Team4450.Robot22.subsystems.Channel;
 import Team4450.Robot22.subsystems.Climber;
@@ -129,7 +129,7 @@ public class RobotContainer
 	{
 		NoProgram,
 		DriveOut,
-		ShootFirst
+		AutonJB1
 	}
 
 	private static SendableChooser<AutoProgram>	autoChooser;
@@ -354,7 +354,7 @@ public class RobotContainer
 		new JoystickButton(launchPad, LaunchPad.LaunchPadControlIDs.BUTTON_GREEN.value)
     		.whenReleased(new InstantCommand(driveBase::zeroOdometer));
         
-        // Toggle shooter wheel high/low RPM.
+        // Toggle chooter wheel high/low RPM.
 		new JoystickButton(launchPad, LaunchPad.LaunchPadControlIDs.BUTTON_RED_RIGHT.value)
     		.whenReleased(new InstantCommand(chooter::toggleHighLowRPM));
 
@@ -427,12 +427,12 @@ public class RobotContainer
 				autoCommand = null;
 				break;
  				
-			case AutonJB1:
-				autoCommand = new AutonJB1(driveBase, startingPose);
+			case DriveOut:
+				autoCommand = new DriveOut(driveBase, startingPose);
 				break;
  				
-			case AutonJB2:
-				autoCommand = new AutonJB2(driveBase, startingPose);
+			case AutonJB1:
+				autoCommand = new AutonJB1(driveBase, startingPose);
 				break;
 		}
         
@@ -454,7 +454,7 @@ public class RobotContainer
 		SendableRegistry.add(autoChooser, "Auto Program");
 		autoChooser.setDefaultOption("No Program", AutoProgram.NoProgram);
 		autoChooser.addOption("Drive Out", AutoProgram.DriveOut);		
-		autoChooser.addOption("Shoot First", AutoProgram.ShootFirst);		
+		autoChooser.addOption("AutonJB1", AutoProgram.AutonJB1);		
 				
 		SmartDashboard.putData(autoChooser);
 	}

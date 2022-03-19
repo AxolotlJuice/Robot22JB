@@ -9,10 +9,12 @@ import Team4450.Lib.Util;
 import static Team4450.Robot22.Constants.*;
 
 import Team4450.Robot22.RobotContainer;
+import Team4450.Robot22.subsystems.Channel;
 import Team4450.Robot22.subsystems.Chooter;
 import Team4450.Robot22.subsystems.DriveBase;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
@@ -21,30 +23,23 @@ public class AutonJB2 extends CommandBase{
     
     private SequentialCommandGroup	commands = null;
 	private Command command = null;
-    
     private Chooter chooter;
-    
+    private Channel channel;
     private Pose2d startingPose;
     private final DriveBase driveBase;
-
-
-    private double tempIntialX, tempIntialY;
 
     public AutonJB2(DriveBase driveBase, Pose2d startingPose){
         Util.consoleLog();
         this.driveBase = driveBase;
         this.startingPose = startingPose;
         addRequirements(driveBase);
-
-        /*
-        if(startingPose2d ==  ){
-        }
-        */ 
     }
-
     @Override
     public void initialize(){
         Util.consoleLog(); 
+
+        LCD.printLine(LCD_1, "Mode: Auto - ShootFirst - All=%s, Location=%d, FMS=%b, msg=%s", alliance.name(), location, 
+				DriverStation.isFMSAttached(), gameMessage);
 
         driveBase.setMotorSafety(false);
 
@@ -102,7 +97,7 @@ public class AutonJB2 extends CommandBase{
                                 AutoDrive.Heading.angle);
         commands.addCommands(command);
 
-        command = new InstantCommand(chooter::autonHighShot);
+        command = new InstantCommand(chooter::highShot);
         commands.addCommands(command);
 
         command = new AutoDrive(driveBase, -1,

@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import Team4450.Robot22.commands.autonomous.AutonJB1;
 import Team4450.Robot22.commands.autonomous.AutonJB2;
-import Team4450.Robot22.subsystems.DriveBase;
 
 public class AutonSelect extends SubsystemBase
 {

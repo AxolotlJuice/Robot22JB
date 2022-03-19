@@ -2,6 +2,7 @@ package Team4450.Robot22.commands.autonomous;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import Team4450.Lib.LCD;
 import Team4450.Lib.SRXMagneticEncoderRelative;
 import Team4450.Lib.Util;
 
@@ -13,6 +14,7 @@ import Team4450.Robot22.subsystems.Chooter;
 import Team4450.Robot22.subsystems.DriveBase;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -24,7 +26,7 @@ public class AutonJB1 extends CommandBase{
 	private Command command = null;
     
     private Chooter chooter;
-    
+    private Channel channel;
     private Pose2d startingPose;
     private final DriveBase driveBase;
 
@@ -38,28 +40,37 @@ public class AutonJB1 extends CommandBase{
     @Override
     public void initialize(){
         Util.consoleLog(); 
-        driveBase.setMotorSafety(false);
-        driveBase.resetEncodersWithDelay();
-        RobotContainer.navx.resetYaw();
-        RobotContainer.navx.setHeading(startingPose.getRotation().getDegrees() + 90); //will needed to be changed
-        RobotContainer.navx.setTargetHeading(startingPose.getRotation().getDegrees() + 90);
-        driveBase.SetCANTalonRampRate(1.0);
-        driveBase.resetOdometer(startingPose, startingPose.getRotation().getDegrees() + 90);
-        commands = new SequentialCommandGroup();
-     
-        //run method in chooter
-        //rotate
-        //command = new AutoDrive(driveBase, -0.5, //-0.5 needs to be 3.5in equivalent
-        //                        SRXMagneticEncoderRelative.getTicksForDistance( 3, DRIVE_WHEEL_DIAMETER),
-        //                        AutoDrive.StopMotors.stop,
-        //                        AutoDrive.Brakes.on,
-        //                        AutoDrive.Pid.on,
-        //                        AutoDrive.Heading.angle);
-        //commands.addCommands(command);
+
+        LCD.printLine(LCD_1, "Mode: Auto - ShootFirst - All=%s, Location=%d, FMS=%b, msg=%s", alliance.name(), location, 
+				DriverStation.isFMSAttached(), gameMessage);
         
-        command = new InstantCommand(chooter::highShot);
+        driveBase.setMotorSafety(false);
+        
+        driveBase.resetEncodersWithDelay();
+        
+        RobotContainer.navx.resetYaw();
+        
+        RobotContainer.navx.setHeading(startingPose.getRotation().getDegrees() + 90); //will needed to be changed
+        
+        RobotContainer.navx.setTargetHeading(startingPose.getRotation().getDegrees() + 90);
+        
+        driveBase.SetCANTalonRampRate(1.0);
+        
+        driveBase.resetOdometer(startingPose, startingPose.getRotation().getDegrees() + 90);
+        
+        commands = new SequentialCommandGroup();
+
+        command = new InstantCommand(chooter::enable);
         commands.addCommands(command);
         
+        command = new WaitCommand(2.0);
+
+        command = new InstantCommand(channel::feedBall);
+        
+        command = new InstantCommand(chooter::highShot);
+        
+        command = new InstantCommand(chooter::disable);
+
         command = new AutoRotate(driveBase, 1.0, 148.0, AutoDrive.Pid.on, AutoDrive.Heading.angle);
         commands.addCommands(command);
         
@@ -84,12 +95,19 @@ public class AutonJB1 extends CommandBase{
         //move 3.975897565 ft.
         commands.addCommands(command);
 
-        command = new InstantCommand(chooter::highShot);
+        command = new InstantCommand(chooter::enable);
         commands.addCommands(command);
-
-        command = new WaitCommand(0.2);
+        
+        command = new WaitCommand(2.0);
 
         command = new InstantCommand(channel::feedBall);
+        
+        command = new InstantCommand(chooter::highShot);
+        
+        command = new InstantCommand(chooter::disable);
+        commands.addCommands(command);
+
+        
 
         command = new AutoDrive(driveBase, -1,
                                 SRXMagneticEncoderRelative.getTicksForDistance(2.0, DRIVE_WHEEL_DIAMETER),
@@ -97,6 +115,8 @@ public class AutonJB1 extends CommandBase{
                                 AutoDrive.Brakes.on,
                                 AutoDrive.Pid.on,
                                 AutoDrive.Heading.angle);
+        
+        
         commands.schedule(); //this is used to signify the end of the command squence.
         
     } 

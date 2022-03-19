@@ -1,14 +1,10 @@
-
 package Team4450.Robot22.subsystems;
 
 import static Team4450.Robot22.Constants.SHOOTER_TALON;
-import static Team4450.Robot22.Constants.INDEXER_VICTOR;
 import static Team4450.Robot22.Constants.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-
 import Team4450.Lib.FXEncoder;
 import Team4450.Lib.Util;
 import edu.wpi.first.wpilibj.Timer;
@@ -32,8 +28,7 @@ public class Chooter extends PIDSubsystem{
     private double          startTime, kS = .498, kV = .108;
 
     private Channel         channel;
-    // ks and kv determined by characterizing the shooter motor. See the shooter characterization
-    // project.
+    
     private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(kS, kV);
     
     public Chooter(Channel channel)
@@ -49,6 +44,21 @@ public class Chooter extends PIDSubsystem{
         this.channel = channel;
 
         Util.consoleLog("Shooter created!");
+    }
+
+    public void initialize(boolean high)
+    {
+        if (high)
+        {
+            targetRPM = highTargetRPM;
+            highRPM = true;
+        } else
+        {
+            targetRPM = lowTargetRPM;
+            highRPM = false;
+        }
+
+        updateDS();
     }
 
     public void enable(double rpm){
@@ -96,11 +106,6 @@ public class Chooter extends PIDSubsystem{
 
     public boolean isRunning(){
         return wheelRunning; 
-    }
-
-    private void backupIndexer(){ 
-        Util.consoleLog();
-        Timer.delay(0);
     }
 
     public void periodic()
@@ -152,6 +157,18 @@ public class Chooter extends PIDSubsystem{
         return encoder.getRPM();
     }
 
+    @Override
+    protected void useOutput(double output, double setpoint) 
+    {
+        double ff = m_shooterFeedforward.calculate(setpoint / 60);
+        
+        double volts = output + ff;
+
+        //Util.consoleLog("rpm=%.0f  out=%.3f  set=%.3f  ff=%.3f  v=%.3f", getRPM(), output, setpoint, ff, volts);
+
+        shooterMotor.setVoltage(volts);
+    }
+
     private void startWheel()
     {
         startWheel(currentPower);
@@ -193,14 +210,24 @@ public class Chooter extends PIDSubsystem{
         SmartDashboard.putBoolean("ShooterHighRPM", highRPM);
     }
 
-    @Override
-    protected void useOutput(double output, double setpoint) {
-        
-        
+    private void backupIndexer()
+    {
+        Util.consoleLog();
+
+        channel.toggleIndexerDown();
+
+        Timer.delay(.5);   
+
+        channel.stopIndexer();
     }
 
     @Override
     protected double getMeasurement() {
         return 0;
+    }
+
+    public double getMaxRPM()
+    {
+        return encoder.getMaxRPM();
     }
 }

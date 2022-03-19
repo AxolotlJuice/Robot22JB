@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Channel extends SubsystemBase{
     
-    
     private boolean indexerRunning;
 
     private WPI_VictorSPX   indexerMotor = new WPI_VictorSPX(INDEXER_VICTOR);
