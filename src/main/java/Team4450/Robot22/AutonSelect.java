@@ -28,13 +28,13 @@ public class AutonSelect extends SubsystemBase
 	private final Chooter chooter;
 	private final Climber climber;
 
-    public AutonSelect(DriveBase driveBase, Channel channel, Pickup pickup, Chooter chooter, Climber climber)
+    public AutonSelect() //pull from Robot Container?
     {
-        this.driveBase = new DriveBase();
-        this.channel = new Channel();
-        this.pickup = new Pickup();
-        this.chooter = new Chooter(channel);
-        this.climber = new Climber();
+        driveBase = new DriveBase();
+        channel = new Channel();
+        pickup = new Pickup();
+        chooter = new Chooter(channel);
+        climber = new Climber();
     }
 
 
@@ -114,10 +114,10 @@ public class AutonSelect extends SubsystemBase
         setAutoChoices();
         setStartingPoses();
 
-    return autoCommand;
+        return autoCommand;
     }
 
-    private static void setAutoChoices()
+    public static void setAutoChoices()
     {       
         autoChooser = new SendableChooser<AutoProgram>();
             

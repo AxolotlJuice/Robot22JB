@@ -3,6 +3,7 @@ package Team4450.Robot22;
 
 import Team4450.Lib.*;
 import Team4450.Robot22.RobotContainer;
+import Team4450.Robot22.AutonSelect;
 import Team4450.Robot22.wpilib.TimedRobot;
 
 //import Team4450.Robot22.subsystems.ColorWheel;
@@ -31,7 +32,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot 
 {
   private RobotContainer robotContainer;
-  private AutonSelect autonSelect;
+  
 
   /**
    * This function is called when the robot is first started up and should be used
@@ -243,7 +244,7 @@ public class Robot extends TimedRobot
 
     // RobotContainer function determines which auto command is selected to run.
     
-    Command autonomousCommand = robotContainer.getAutonPath();
+    Command autonomousCommand = robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
 

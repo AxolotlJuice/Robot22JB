@@ -61,7 +61,7 @@ import Team4450.Robot22.subsystems.Chooter;
  * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
  * (including subsystems, commands, and button mappings) should be declared here.
  */
-public class RobotContainer 
+public class RobotContainer
 {
 	// Subsystems.
 
@@ -74,6 +74,7 @@ public class RobotContainer
 	public static Pickup		pickup;
 	public static Chooter		chooter;
 	public static Climber		climber;
+	public final AutonSelect autonPath;
 
 	// Subsystem Default Commands.
 
@@ -81,6 +82,7 @@ public class RobotContainer
 	//private final ArcadeDrive	driveCommand;
 
     // Persistent Commands.
+	
 	
 
 	// Some notes about Commands.
@@ -148,12 +150,13 @@ public class RobotContainer
 	}
 	
 	private static SendableChooser<AutoProgram>	autoChooser; */
-	private static SendableChooser<Pose2d>		startingPoseChooser;
+	//private static SendableChooser<Pose2d>		startingPoseChooser;
 	
 
 	/**
 	 * The container for the robot. Contains subsystems, Opertor Interface devices, and commands.
 	 */
+	
 	public RobotContainer() throws Exception
 	{
 		Util.consoleLog();
@@ -223,6 +226,9 @@ public class RobotContainer
         chooter = new Chooter(channel);
         pickup = new Pickup();
 		climber = new Climber();
+		
+		autonPath = new AutonSelect();
+
 
 		// Create any persistent commands.
 
@@ -291,11 +297,13 @@ public class RobotContainer
 		}
         
         // Configure autonomous routines and send to dashboard.
-
-		//setAutoChoices();
+		
+		
+		/*
+		setAutoChoices();
 
 		setStartingPoses();
-
+		*/
 		// Configure the button bindings for real and simulated robot.
 		
         if (RobotBase.isReal()) 
@@ -308,7 +316,10 @@ public class RobotContainer
         // being done while we are getting started up. Hopefully will complete before we are ready to
         // use the trajectory. See Robot22B2 for example of how to do this.
 	}
+	
 
+
+	
 	/**
 	 * Use this method to define your button->command mappings.  Buttons can be created by
 	 * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -422,14 +433,14 @@ public class RobotContainer
 	 * @return The command to run in autonomous
 	 */
 
-	public Command getAutonPath()
+	public Command getAutonomousCommand()
 	{
-		AutonSelect autonPath = new AutonSelect(driveBase, channel, pickup, chooter, climber);
 
-		return autonPath.getAutonomousCommand();
+		Command AutonCommand = autonPath.getAutonomousCommand();
+		return AutonCommand;
+
 	}
-
-		/*
+	/*
 	public Command getAutonomousCommand() 
 	{
 		
@@ -507,7 +518,7 @@ public class RobotContainer
 	*/
     // Configure SendableChooser (drop down list on dashboard) with starting pose choices and
 	// send them to SmartDashboard/ShuffleBoard.
-	
+	/*
 	private static void setStartingPoses()
 	{
 		Util.consoleLog();
@@ -527,7 +538,7 @@ public class RobotContainer
 				
 		SmartDashboard.putData(startingPoseChooser);
 	}
-
+	*/
 	/**
 	 *  Get and log information about the current match from the FMS or DS.
 	 */
