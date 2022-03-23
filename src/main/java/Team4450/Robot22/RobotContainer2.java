@@ -1,3 +1,4 @@
+/*
 package Team4450.Robot22;
 
 import static Team4450.Robot22.Constants.*;
@@ -34,20 +35,23 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
+//import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import Team4450.Robot22.commands.ArcadeDrive;
+//import Team4450.Robot22.commands.ArcadeDrive;
 import Team4450.Robot22.commands.Climb;
 import Team4450.Robot22.commands.TankDrive;
-import Team4450.Robot22.commands.autonomous.DriveOut;
-import Team4450.Robot22.commands.autonomous.ShootFirst;
-import Team4450.Robot22.commands.autonomous.ShootFirst2BL;
-import Team4450.Robot22.commands.autonomous.ShootFirst2BR;
+//import Team4450.Robot22.commands.autonomous.DriveOut;
+//import Team4450.Robot22.commands.autonomous.ShootFirst;
+//import Team4450.Robot22.commands.autonomous.ShootFirst2BL;
+//import Team4450.Robot22.commands.autonomous.ShootFirst2BR;
+//import Team4450.Robot22.commands.autonomous.ShootFirst3BL;
+//import Team4450.Robot22.commands.autonomous.ShootFirst3BR;
 import Team4450.Robot22.commands.NotifierCommand;
 import Team4450.Robot22.subsystems.Channel;
 import Team4450.Robot22.subsystems.Climber;
 import Team4450.Robot22.subsystems.DriveBase;
-import Team4450.Robot22.subsystems.LimeLight;
+//import Team4450.Robot22.subsystems.LimeLight;
 import Team4450.Robot22.subsystems.Pickup;
 import Team4450.Robot22.subsystems.Chooter;
 
@@ -57,15 +61,21 @@ import Team4450.Robot22.subsystems.Chooter;
  * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
  * (including subsystems, commands, and button mappings) should be declared here.
  */
+/*
 public class RobotContainer
 {
 	// Subsystems.
+
+	// commented out sections: 37, 40, 43-48, 53, 135-147, 290, 423-473, 676-494
+	//They were commented out because we wanted to run a student made AutonSelect.
+
 
 	private final DriveBase 	driveBase;
 	public static Channel		channel;
 	public static Pickup		pickup;
 	public static Chooter		chooter;
 	public static Climber		climber;
+	public final AutonSelect autonPath;
 
 	// Subsystem Default Commands.
 
@@ -73,6 +83,7 @@ public class RobotContainer
 	//private final ArcadeDrive	driveCommand;
 
     // Persistent Commands.
+	
 	
 
 	// Some notes about Commands.
@@ -126,21 +137,27 @@ public class RobotContainer
 
     // List of autonomous programs. Any change here must be reflected in getAutonomousCommand()
     // and setAutoChoices() which appear later in this class.
+
+	/*
 	private enum AutoProgram
 	{
 		NoProgram,
 		DriveOut,
 		ShootFirst,
-		ShootFirst2BR,
 		ShootFirst2BL,
+		ShootFirst2BR,
+		ShootFirst3BL,
+		ShootFirst3BR
 	}
-
-	private static SendableChooser<AutoProgram>	autoChooser;
-	private static SendableChooser<Pose2d>		startingPoseChooser;
+	
+	private static SendableChooser<AutoProgram>	autoChooser; */
+	//private static SendableChooser<Pose2d>		startingPoseChooser;
+	
 
 	/**
 	 * The container for the robot. Contains subsystems, Opertor Interface devices, and commands.
 	 */
+	/*
 	public RobotContainer() throws Exception
 	{
 		Util.consoleLog();
@@ -210,6 +227,9 @@ public class RobotContainer
         chooter = new Chooter(channel);
         pickup = new Pickup();
 		climber = new Climber();
+		
+		autonPath = new AutonSelect();
+
 
 		// Create any persistent commands.
 
@@ -278,13 +298,15 @@ public class RobotContainer
 		}
         
         // Configure autonomous routines and send to dashboard.
-
+		
+		
+		/*
 		setAutoChoices();
 
 		setStartingPoses();
-
+		*/
 		// Configure the button bindings for real and simulated robot.
-		
+		/*
         if (RobotBase.isReal()) 
             configureButtonBindings();
         else
@@ -295,7 +317,10 @@ public class RobotContainer
         // being done while we are getting started up. Hopefully will complete before we are ready to
         // use the trajectory. See Robot22B2 for example of how to do this.
 	}
+	/*
 
+
+	
 	/**
 	 * Use this method to define your button->command mappings.  Buttons can be created by
 	 * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -304,6 +329,8 @@ public class RobotContainer
      * 
      * These buttons are for real robot with 3 sticks and launchpad.
 	 */
+
+	 /*
 	private void configureButtonBindings() 
 	{
 		Util.consoleLog();
@@ -396,6 +423,7 @@ public class RobotContainer
      * 
      * These buttons are for simulated robot with Xbox controller on port 4.
 	 */
+	/*
 	private void configureButtonBindingsSim() 
 	{
         Util.consoleLog();
@@ -408,8 +436,21 @@ public class RobotContainer
 	 * DS drop down list of commands.
 	 * @return The command to run in autonomous
 	 */
+
+	 /*
+	public Command getAutonomousCommand()
+	{
+
+		Command AutonCommand = autonPath.getAutonomousCommand();
+		return AutonCommand;
+
+	}
+	/*
 	public Command getAutonomousCommand() 
 	{
+		
+
+		
 		AutoProgram		program = AutoProgram.NoProgram;
 		Pose2d			startingPose = BLUE_1;
 		Command			autoCommand = null;
@@ -434,28 +475,34 @@ public class RobotContainer
 				autoCommand = new DriveOut(driveBase, startingPose);
 				break;
  				
-			case ShootFirst:
-				autoCommand = new ShootFirst(driveBase, chooter, channel, startingPose);
+			case ShootFirst2BL:
+				autoCommand = new ShootFirst2BL(driveBase, chooter, channel, startingPose, pickup);
 				break;
 
 			case ShootFirst2BR:
 				autoCommand = new ShootFirst2BR(driveBase, chooter, channel, startingPose, pickup);
 				break;
 
-			case ShootFirst2BL:
-				autoCommand = new ShootFirst2BL(driveBase, chooter, channel, startingPose, pickup);
+			case ShootFirst3BL:
+				autoCommand = new ShootFirst3BL(driveBase, chooter, channel, startingPose, pickup);
 				break;
+
+			case ShootFirst3BR:
+				autoCommand = new ShootFirst3BR(driveBase, chooter, channel, startingPose, pickup);
+				break;
+
 		}
         
         // Reset motor deadband for auto.
         driveBase.setPowerDeadBand(.02);
 
 		return autoCommand;
+		
 	}
-  
+	*/
     // Configure SendableChooser (drop down list on dashboard) with auto program choices and
 	// send them to SmartDashboard/ShuffleBoard.
-	
+	/*
 	private static void setAutoChoices()
 	{
 		Util.consoleLog();
@@ -464,16 +511,19 @@ public class RobotContainer
 		
 		SendableRegistry.add(autoChooser, "Auto Program");
 		autoChooser.setDefaultOption("No Program", AutoProgram.NoProgram);
-		autoChooser.addOption("Drive Out", AutoProgram.DriveOut);		
-		autoChooser.addOption("Shoot First", AutoProgram.ShootFirst);		
-		autoChooser.addOption("Shoot First 2-Ball right", AutoProgram.ShootFirst2BR);
-        autoChooser.addOption("Shoot First 2-Ball left", AutoProgram.ShootFirst2BL);
+		autoChooser.addOption("Drive Out", AutoProgram.DriveOut);
+		autoChooser.addOption("ShootFrist", AutoProgram.ShootFirst);
+		autoChooser.addOption("ShootFrist2BL", AutoProgram.ShootFirst2BL);
+		autoChooser.addOption("ShootFrist2BR", AutoProgram.ShootFirst2BR);		
+		autoChooser.addOption("ShootFrist3BL", AutoProgram.ShootFirst3BL);
+		autoChooser.addOption("ShootFrist3BR", AutoProgram.ShootFirst3BR);
+
 		SmartDashboard.putData(autoChooser);
 	}
-  
+	*/
     // Configure SendableChooser (drop down list on dashboard) with starting pose choices and
 	// send them to SmartDashboard/ShuffleBoard.
-	
+	/*
 	private static void setStartingPoses()
 	{
 		Util.consoleLog();
@@ -493,10 +543,12 @@ public class RobotContainer
 				
 		SmartDashboard.putData(startingPoseChooser);
 	}
-
+	*/
 	/**
 	 *  Get and log information about the current match from the FMS or DS.
 	 */
+
+	 /*
 	public void getMatchInformation()
 	{
 		alliance = DriverStation.getAlliance();
@@ -514,6 +566,7 @@ public class RobotContainer
 	 * Reset sticky faults in PDP and PCM and turn compressor on/off as
 	 * set by switch on DS.
 	 */
+	/*
 	public void resetFaults()
 	{
 		// This code turns on/off the automatic compressor management if requested by DS. Putting this
@@ -532,6 +585,7 @@ public class RobotContainer
      * @param fileName Name of file. Will automatically look in deploy directory.
      * @return The path's trajectory.
      */
+	/*
     public static Trajectory loadTrajectoryFile(String fileName)
     {
         Trajectory  trajectory;
@@ -553,3 +607,4 @@ public class RobotContainer
         return trajectory;
     }
 }
+*/

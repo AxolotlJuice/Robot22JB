@@ -132,7 +132,7 @@ public class ShootFirst2BR extends CommandBase
 		//start movement commands
 		
 		//rotate: 194 (clockwise) (192)
-		command = new AutoRotate(driveBase, 0.3, 194, AutoDrive.Pid.on, AutoDrive.Heading.angle);
+		command = new AutoRotate(driveBase, 0.3, 194, AutoDrive.Pid.on, AutoDrive.Heading.heading);
 		commands.addCommands(command);
 
 		//engage pickup

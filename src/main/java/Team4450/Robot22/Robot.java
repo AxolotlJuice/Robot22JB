@@ -3,7 +3,7 @@ package Team4450.Robot22;
 
 import Team4450.Lib.*;
 import Team4450.Robot22.RobotContainer;
-import Team4450.Robot22.AutonSelect;
+//import Team4450.Robot22.AutonSelect;
 import Team4450.Robot22.wpilib.TimedRobot;
 
 //import Team4450.Robot22.subsystems.ColorWheel;
