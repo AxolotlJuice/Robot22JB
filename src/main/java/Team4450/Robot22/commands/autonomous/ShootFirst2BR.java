@@ -132,16 +132,16 @@ public class ShootFirst2BR extends CommandBase
 		//start movement commands
 		
 		//rotate: 194 (clockwise) (192)
-		command = new AutoRotate(driveBase, 0.3, 194, AutoDrive.Pid.on, AutoDrive.Heading.heading);
+		command = new AutoRotate(driveBase, 0.3, -166, AutoDrive.Pid.on, AutoDrive.Heading.angle);
 		commands.addCommands(command);
 
 		//engage pickup
 		command = new InstantCommand(pickup::toggleDeploy);
 
 		//Drive: (x:9.288, y:5.443)     (old distance: 4.266713047441)
-		//       (x:10.400, y:5.937) distance: 1.21679086124 m.
+		//       (x:10.400, y:5.937) distance: 1.21679086124 m., 3.992096001443569 in.
 		command = new AutoDrive(driveBase, 0.5, 
-								SRXMagneticEncoderRelative.getTicksForDistance(3.992096001443569, DRIVE_WHEEL_DIAMETER),
+								SRXMagneticEncoderRelative.getTicksForDistance(3.99, DRIVE_WHEEL_DIAMETER),
 								AutoDrive.StopMotors.stop,
 								AutoDrive.Brakes.on,
 								AutoDrive.Pid.on,
@@ -156,7 +156,7 @@ public class ShootFirst2BR extends CommandBase
 		commands.addCommands(command);
 
 		command = new AutoDrive(driveBase, -0.5, 
-								SRXMagneticEncoderRelative.getTicksForDistance(3.992096001443569, DRIVE_WHEEL_DIAMETER),
+								SRXMagneticEncoderRelative.getTicksForDistance(3.99, DRIVE_WHEEL_DIAMETER),
 								AutoDrive.StopMotors.stop,
 								AutoDrive.Brakes.on,
 								AutoDrive.Pid.on,
@@ -164,7 +164,7 @@ public class ShootFirst2BR extends CommandBase
 		commands.addCommands(command);
 
 		//rotate 194 (counter-clockwise)
-		command = new AutoRotate(driveBase, 0.3, -194, AutoDrive.Pid.on, AutoDrive.Heading.angle);
+		command = new AutoRotate(driveBase, 0.3, 166, AutoDrive.Pid.on, AutoDrive.Heading.angle);
 		commands.addCommands(command);
 		
 		//shoot command squence
@@ -182,7 +182,7 @@ public class ShootFirst2BR extends CommandBase
 		
 		command = new InstantCommand(chooter::disable);
 		commands.addCommands(command);
-
+		
 		//drive out of stating area
 		command = new AutoDrive(driveBase, -0.5, 
 								SRXMagneticEncoderRelative.getTicksForDistance(4.0, DRIVE_WHEEL_DIAMETER),

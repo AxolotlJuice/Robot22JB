@@ -48,7 +48,7 @@ public class Pickup extends SubsystemBase{
     public void extend() {
         Util.consoleLog();
 
-        pickupValve.SetA();
+        pickupValve.SetB();
 
         extended = true;
 
@@ -59,7 +59,7 @@ public class Pickup extends SubsystemBase{
     public void retract() {
         Util.consoleLog();
 
-        pickupValve.SetB();
+        pickupValve.SetA();
 
         extended = false;
 

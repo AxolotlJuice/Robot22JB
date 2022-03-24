@@ -52,7 +52,8 @@ public class Chooter extends PIDSubsystem{
         {
             targetRPM = highTargetRPM;
             highRPM = true;
-        } else
+        } 
+        else
         {
             targetRPM = lowTargetRPM;
             highRPM = false;
@@ -68,6 +69,9 @@ public class Chooter extends PIDSubsystem{
 
     public void enable(){
         Util.consoleLog("target rpm=%.0f", targetRPM);
+        backupIndexer();
+        setSetpoint(targetRPM);
+        super.enable();
         wheelRunning = true;
         startUp = true;
         Util.timeStamp();
@@ -76,6 +80,7 @@ public class Chooter extends PIDSubsystem{
 
     public void disable(){
         Util.consoleLog();
+        super.disable();
         stopWheel();
         updateDS();
     }
@@ -115,11 +120,11 @@ public class Chooter extends PIDSubsystem{
             
             super.periodic();
 
-            Util.consoleLog("current=%.3f", shooterMotor.getStatorCurrent());
+            //Util.consoleLog("current=%.3f", shooterMotor.getStatorCurrent());
 
             if (isRunning() && startUp)
             {
-                if (shooterMotor.getStatorCurrent() > 150)
+                if (shooterMotor.getStatorCurrent() > 200)
                 {
                     stopWheel();
                     backupIndexer();
@@ -130,20 +135,19 @@ public class Chooter extends PIDSubsystem{
         }
         else
         {
-            if (isRunning())
-            {
-                stopWheel();
-            }}
-
+            if (isRunning()) stopWheel();
             targetRPM = lowTargetRPM;
             highRPM = false;
         }
+        
+    }
     public boolean toggleWheel(double power)
     {
         Util.consoleLog("%.2f", power);
         if (isRunning())
             stopWheel();
-        else startWheel(power);
+        else 
+            startWheel(power);
         return isRunning(); 
     }
 
@@ -177,7 +181,7 @@ public class Chooter extends PIDSubsystem{
     private void startWheel(double power)
     { 
         Util.consoleLog("%.2f", power);
-        currentPower = power;
+        backupIndexer();
         if (isEnabled()) disable();
         shooterMotor.set(currentPower);
         wheelRunning = true;
@@ -189,7 +193,7 @@ public class Chooter extends PIDSubsystem{
     public void stopWheel()
     {
         Util.consoleLog();
-        if (isEnabled()) disable();
+        if (isEnabled())super.disable();
         shooterMotor.stopMotor();
         wheelRunning = false;
         updateDS();
@@ -200,7 +204,8 @@ public class Chooter extends PIDSubsystem{
          Util.consoleLog();
          if (isEnabled())
                disable();
-        else enable();
+        else 
+            enable();
         return isRunning();
     }
 

@@ -35,6 +35,9 @@ public class Climber extends SubsystemBase{
 
 	private boolean			        brakeEngaged, mainExtended, auxExtended;
 	
+
+	
+
     public Climber()
     {
         Util.consoleLog();
@@ -61,8 +64,19 @@ public class Climber extends SubsystemBase{
         Util.consoleLog("Climber created");
     }
     
+	public void initialize()
+	{
+		Util.consoleLog();
+
+		releaseBrake();
+        extendMain();
+        retractAux();
+	}
+
     @Override
-    public void periodic(){}
+    public void periodic(){
+
+	}
 
     public void setClimberPower(double power)
     {
@@ -82,6 +96,11 @@ public class Climber extends SubsystemBase{
         Util.consoleLog();
         climberDrive.stopMotor();
     }
+
+	public boolean getSwitch()
+	{
+		return climberSwitch.get();
+	}
 
     public int encoderGet()
     {
@@ -113,8 +132,16 @@ public class Climber extends SubsystemBase{
 		return brakeEngaged;
 	}
 
+    public void toggleBrake()
+	{
+		Util.consoleLog();
+		
+		if (brakeEngaged)
+			releaseBrake();
+		else
+			engageBrake();
+	}
     
-
     private void updateDS()
 	{
 		Util.consoleLog();
@@ -128,7 +155,7 @@ public class Climber extends SubsystemBase{
 	{
 		Util.consoleLog();
 		
-		mainValve.SetA();
+		mainValve.SetB();
         
         mainExtended = true;
 	}
@@ -137,7 +164,7 @@ public class Climber extends SubsystemBase{
 	{
 		Util.consoleLog();
 		
-        mainValve.SetB();
+        mainValve.SetA();
         
         mainExtended = false;
 
@@ -154,15 +181,6 @@ public class Climber extends SubsystemBase{
 		  	extendMain();
     }
 
-    public void toggleBrake()
-	{
-		Util.consoleLog();
-		
-		if (brakeEngaged)
-			releaseBrake();
-		else
-			engageBrake();
-	}
     
     public boolean isMainExtended()
 	{
@@ -203,18 +221,5 @@ public class Climber extends SubsystemBase{
 	{
 		return auxExtended;
 	}
-
-	public boolean getSwitch()
-	{
-		return climberSwitch.get();
-	}
-
-	public void initialize()
-	{
-		Util.consoleLog();
-
-		releaseBrake();
-        extendMain();
-        retractAux();
-	}
+	
 }
