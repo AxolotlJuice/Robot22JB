@@ -93,7 +93,8 @@ public class TankDrive extends CommandBase
    */
   @Override
   public void execute() 
-  {
+  {     
+      
 	    double leftY = leftPower.getAsDouble() * kPowerGain, rightY = rightPower.getAsDouble() * kPowerGain, angle;
 	  
 	    LCD.printLine(LCD_2, "leftenc=%d  rightenc=%d", driveBase.getLeftEncoder(), driveBase.getRightEncoder());			
@@ -115,8 +116,13 @@ public class TankDrive extends CommandBase
                     driveBase.leftEncoder.getRotations(), pose.getY(), pose.getRotation().getDegrees());
                     
       LCD.printLine(LCD_9, "shooter rpm=%.0f  max=%.0f", RobotContainer.chooter.getRPM(), 
-                    RobotContainer.chooter.getMaxRPM());
+                    RobotContainer.chooter.getMaxRPM(), RobotContainer.channel.getBallStopSwitch(),
+                    RobotContainer.channel.getBallStartSensor());
+
+    
 	  
+        if (robot.isAutonomous()) return;
+
 	  if (altDriveMode)
 	  {	  // normal tank with straight drive assist when sticks within 10% of each other and
         // right stick power is greater than 50%.

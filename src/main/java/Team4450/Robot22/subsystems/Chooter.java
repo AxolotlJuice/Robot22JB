@@ -106,6 +106,7 @@ public class Chooter extends PIDSubsystem{
             highRPM = false;
         }
         updateDS();
+        Util.consoleLog("rpm=%.0f", targetRPM);
         return highRPM;
     }
 
@@ -217,11 +218,13 @@ public class Chooter extends PIDSubsystem{
 
     private void backupIndexer()
     {
+        if(robot.isAutonomous()) return;
+
         Util.consoleLog();
 
         channel.toggleIndexerDown();
 
-        Timer.delay(.5);   
+        Timer.delay(.25);   
 
         channel.stopIndexer();
     }

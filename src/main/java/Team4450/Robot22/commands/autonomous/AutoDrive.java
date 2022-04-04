@@ -15,7 +15,7 @@ public class AutoDrive extends CommandBase
 
 	private double			yaw, kSteeringGain = .07, elapsedTime = 0;
 	private double			kP = .0003, kI = .0003, kD = 0;
-	private double			power, startTime; 
+	private double			power, startTime;
     private int 			encoderCounts, iterations, targetHeading; 
     private boolean         driveToHeading;
 	private StopMotors 		stop;
@@ -284,8 +284,8 @@ public class AutoDrive extends CommandBase
 		
 		driveBase.curvatureDrive(power, Util.clampValue(-yaw * kSteeringGain, 1.0), false);
 
-		Util.consoleLog("lpwr=%.2f  rpwr=%.2f", driveBase.getLeftPower(), -driveBase.getRightPower());
-
+		//Util.consoleLog("lpwr=%.2f  rpwr=%.2f", driveBase.getLeftPower(), -driveBase.getRightPower());
+		Util.consoleLog("lpwr=%.2f  rpwr=%.2f", driveBase.getLeftPower(), driveBase.getRightPower());
 		iterations++;
 	}
 	

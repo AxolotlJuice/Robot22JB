@@ -6,17 +6,24 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import Team4450.Lib.Util;
 import Team4450.Robot22.RobotContainer;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Channel extends SubsystemBase{
     
-    private boolean indexerRunning;
+    private boolean indexerRunning, feedingBall;
 
     private WPI_VictorSPX   indexerMotor = new WPI_VictorSPX(INDEXER_VICTOR);
 
     private double defaultPower = 0.30;
+    
+    private DigitalInput    ballStopSwitch = new DigitalInput(BALL_STOP_SWITCH);
+    private AnalogInput     ballStartSensor = new AnalogInput(BALL_START_SENSOR);
+
+    public int              lowestSensorValue, highestSensorValue;
 
     public Channel(){
         indexerMotor.setInverted(true);
@@ -28,6 +35,17 @@ public class Channel extends SubsystemBase{
 
     @Override
     public void periodic() {
+        if (isRunning() && indexerMotor.get() > 0 && getBallStopSwitch() && !feedingBall) stopIndexer();
+
+        // If indexer not running and pickup is running and the light sensor on the intake is
+        // blocked (ball present), start the indexer to grab ball.
+
+        //if (!isRunning() && RobotContainer.pickup.isRunning() && getBallStartSensor() < 500) startIndexer();
+
+        int sensorValue = getBallStartSensor();
+
+        if (sensorValue > highestSensorValue) highestSensorValue = sensorValue;
+        if (sensorValue < lowestSensorValue) lowestSensorValue = sensorValue;
 
     }
 
@@ -35,7 +53,8 @@ public class Channel extends SubsystemBase{
         SmartDashboard.putBoolean("Indexer", indexerRunning);
     }
 
-    public void stopIndexer(){
+    public void stopIndexer()
+    {
         Util.consoleLog();
         
         indexerMotor.stopMotor();
@@ -46,7 +65,7 @@ public class Channel extends SubsystemBase{
     }
 
     public void startIndexer(double power){
-    Util.consoleLog("%.2f", power);
+        Util.consoleLog("%.2f", power);
 		
 		indexerMotor.set(power);
 		
@@ -101,10 +120,25 @@ public class Channel extends SubsystemBase{
         // Can't feed a ball if shooter wheel is not running.
         if  (!RobotContainer.chooter.isRunning()) return;
 
+        feedingBall = true;
+
         startIndexer();
 
-        Timer.delay(.50);   // set time so one ball is fed.
+        Timer.delay(.75);   // set time so one ball is fed.
 
         stopIndexer();
+    
+        feedingBall = false;
+    }
+
+    public boolean getBallStopSwitch()
+    {
+        // Invert as switch port returns true when not in contact with ball.
+        return !ballStopSwitch.get();
+    }
+
+    public int getBallStartSensor()
+    {
+        return ballStartSensor.getValue();
     }
 }

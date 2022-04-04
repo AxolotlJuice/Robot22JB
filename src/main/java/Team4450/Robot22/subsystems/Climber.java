@@ -69,7 +69,7 @@ public class Climber extends SubsystemBase{
 		Util.consoleLog();
 
 		releaseBrake();
-        extendMain();
+        retractMain();
         retractAux();
 	}
 
@@ -155,7 +155,7 @@ public class Climber extends SubsystemBase{
 	{
 		Util.consoleLog();
 		
-		mainValve.SetB();
+		mainValve.SetA();
         
         mainExtended = true;
 	}
@@ -164,7 +164,7 @@ public class Climber extends SubsystemBase{
 	{
 		Util.consoleLog();
 		
-        mainValve.SetA();
+        mainValve.SetB();
         
         mainExtended = false;
 
@@ -187,17 +187,7 @@ public class Climber extends SubsystemBase{
 		return mainExtended;
 	}
 
-    public void toggleDeployAux()
-	{
-		Util.consoleLog("%b", isAuxExtended());
-		
-		if (isMainExtended())
-			retractAux();
-		else
-		  	extendAux();
-    }
-
-    public void extendAux()
+	public void extendAux()
 	{
 		Util.consoleLog();
 		
@@ -216,6 +206,18 @@ public class Climber extends SubsystemBase{
 
         stop();
 	}
+
+    public void toggleDeployAux()
+	{
+		Util.consoleLog("%b", isAuxExtended());
+		
+		if (isAuxExtended())
+			retractAux();
+		else
+		  	extendAux();
+    }
+
+    
 
     public boolean isAuxExtended()
 	{

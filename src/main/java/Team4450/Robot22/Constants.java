@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public final class Constants
 {
-	public static String		PROGRAM_NAME = "RAC22-03.11.22-3";
+	public static String		PROGRAM_NAME = "22JBNeo-03-27-22";
 
 	public static Robot			robot;
 
@@ -48,6 +48,7 @@ public final class Constants
 
 	// Digital Input port assignments. Encoder takes 2 ports.
 	public static final int		CLIMBER_SWITCH = 0;
+	public static final int		BALL_STOP_SWITCH = 1;
 	//public static final int		CLIMBER_ENCODER = 1;		// 1-2
 
 	// Simulation dummy encoders use DIO port numbers above the actual ports on RoboRio.
@@ -57,6 +58,7 @@ public final class Constants
 	// Simulated Gyro needs an actual analog port and has to be 0 or 1.
 	public static final int		SIM_GYRO = 0;
     public static final int		PRESSURE_SENSOR = 1;
+	public static final int		BALL_START_SENSOR = 2;
 
     public static final double	TALON_RAMP_RATE = 1.0;			// Takes 1 sec for full power to be applied.
                                                                 // Tried going above 1.0 but behavior became
@@ -83,6 +85,7 @@ public final class Constants
 	public static final Pose2d	DEFAULT_STARTING_POSE = new Pose2d(1.2, 0.5, new Rotation2d(Math.toRadians(0)));
 
 	// 2022 starting positions. Location in meters, angle in degrees.
+	//right red :8.707 6.028
 
 	public static final Pose2d	BLUE_1 = new Pose2d(6.687, 5.406, new Rotation2d(Math.toRadians(243)));
 	public static final Pose2d	BLUE_2 = new Pose2d(6.148, 4.022, new Rotation2d(Math.toRadians(160)));
@@ -90,7 +93,7 @@ public final class Constants
 	public static final Pose2d	BLUE_4 = new Pose2d(8.133, 2.251, new Rotation2d(Math.toRadians(70)));
 
 	public static final Pose2d	RED_1 = new Pose2d(9.465, 2.812, new Rotation2d(Math.toRadians(60)));
-	public static final Pose2d	RED_2 = new Pose2d(9.866, 4.230, new Rotation2d(Math.toRadians(336)));
+	public static final Pose2d	RED_2 = new Pose2d(8.707, 6.028, new Rotation2d(Math.toRadians(336)));
 	public static final Pose2d	RED_3 = new Pose2d(9.311, 5.373, new Rotation2d(Math.toRadians(332)));
 	public static final Pose2d	RED_4 = new Pose2d(7.902, 6.003, new Rotation2d(Math.toRadians(246)));
 

@@ -28,6 +28,9 @@ public class Pickup extends SubsystemBase{
         lowerVictor = new WPI_VictorSPX(LOWER_PICKUP_VICTOR);
         upperVictor = new WPI_VictorSPX(UPPER_PICKUP_VICTOR);
 
+        lowerVictor.setInverted(true);
+        upperVictor.setInverted(true);
+
         pickupDrive = new MotorControllerGroup(lowerVictor, upperVictor);
 
         retract();

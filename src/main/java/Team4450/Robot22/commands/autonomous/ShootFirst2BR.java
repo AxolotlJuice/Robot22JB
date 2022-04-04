@@ -135,6 +135,7 @@ public class ShootFirst2BR extends CommandBase
 		command = new AutoRotate(driveBase, 0.3, -166, AutoDrive.Pid.on, AutoDrive.Heading.angle);
 		commands.addCommands(command);
 
+		//right red :8.707 6.028
 		//engage pickup
 		command = new InstantCommand(pickup::toggleDeploy);
 
